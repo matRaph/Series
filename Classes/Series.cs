@@ -34,7 +34,8 @@ namespace Series
             returnVar += "Genre: " + this.Genre + Environment.NewLine;
             returnVar += "Title: " + this.Title + Environment.NewLine;
             returnVar += "Description: " + this.Description + Environment.NewLine;
-            returnVar += "Year: " + this.Year;
+            returnVar += "Year: " + this.Year + Environment.NewLine;
+            returnVar += "Deleted? " + this.Excluded;
             return returnVar;
         }
 
@@ -46,6 +47,11 @@ namespace Series
         public int ReturnID()
         {
             return this.ID;
+        }
+
+        public bool ReturnExcluded()
+        {
+            return this.Excluded;
         }
 
         public void Delete()

@@ -10,7 +10,7 @@ namespace Series
     public class SerieRepository : IRepository<Series>
     {
         private List<Series> SerieList = new List<Series>();
-        
+       
         public void Insert(Series entity)
         {
             SerieList.Add(entity);

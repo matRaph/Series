@@ -20,13 +20,13 @@ namespace Series
                         InsertSeries();
                         break;
                     case "3":
-                        //UpdateSeries();
+                        UpdateSeries();
                         break;
                     case "4":
-                        //DeleteSeries();
+                        DeleteSeries();
                         break;
                     case "5":
-                        //SeriesOverview();
+                        OverviewSeries();
                         break;
                     case "C":
                         Console.Clear();
@@ -46,10 +46,9 @@ namespace Series
             WriteLine("2 - Insert new serie");
             WriteLine("3 - Update serie");
             WriteLine("4 - Delete serie");
-            WriteLine("5 - Serie overview");
+            WriteLine("5 - Series overview");
             WriteLine("C - Clean screen");
-            WriteLine("x - Exit");
-            WriteLine();
+            WriteLine("x - Exit\n");
 
             string userOption = ReadLine().ToUpper();
             WriteLine();
@@ -69,13 +68,15 @@ namespace Series
 
             foreach (var serie in list)
             {
-                WriteLine("#ID {0}: - {1}", serie.ReturnID(), serie.ReturnTitle());
+                var excluded = serie.ReturnExcluded();
+                WriteLine("#ID {0}: - {1} {2}", serie.ReturnID(), serie.ReturnTitle(), (excluded ? "*Removed*" : ""));
             }
         }
 
         private static void InsertSeries()
         {
             WriteLine("Insert new series");
+            //List genre enum by name
             foreach (int i in Enum.GetValues(typeof(Genre)))
             {
                 WriteLine("{0}-{1}", i, Enum.GetName(typeof(Genre), i));
@@ -92,10 +93,56 @@ namespace Series
             WriteLine("Enter the series description: ");
             string inputDescription = ReadLine();
 
-            Series newSeries = new  Series(ID: repository.NextID(), Genre: (Genre)inputGenre,
+            Series newSeries = new Series(ID: repository.NextID(), Genre: (Genre)inputGenre,
                                            Title: inputTitle, Description: inputDescription, 
                                            Year: inputYear);
             repository.Insert(newSeries);
+        }
+        
+        private static void UpdateSeries()
+        {
+            Console.WriteLine("Insert series ID: ");
+            int seriesIndex = int.Parse(Console.ReadLine());
+            WriteLine("Insert new series");
+            //List genre enum by name
+            foreach (int i in Enum.GetValues(typeof(Genre)))
+            {
+                WriteLine("{0}-{1}", i, Enum.GetName(typeof(Genre), i));
+            }
+            WriteLine("Enter the genre from the options above: ");
+            int inputGenre = int.Parse(ReadLine());
+
+            WriteLine("Enter the series title: ");
+            string inputTitle = ReadLine();
+
+            WriteLine("Enter the series year: ");
+            int inputYear = int.Parse(ReadLine());
+
+            WriteLine("Enter the series description: ");
+            string inputDescription = ReadLine();
+
+            Series updateSeries = new Series(ID: seriesIndex, Genre: (Genre)inputGenre,
+                                           Title: inputTitle, Description: inputDescription,
+                                           Year: inputYear);
+            repository.Update(seriesIndex, updateSeries);
+
+        }
+
+        private static void DeleteSeries()
+        {
+            Console.WriteLine("Insert series ID: ");
+            int serieIndex = int.Parse(Console.ReadLine());
+
+            repository.Remove(serieIndex);
+        }
+
+        private static void OverviewSeries()
+        {
+            Console.WriteLine("Insert series ID: ");
+            int seriesIndex = int.Parse(Console.ReadLine());
+
+            var series = repository.ReturnByID(seriesIndex);
+            Console.WriteLine(series);
         }
     }
 }
